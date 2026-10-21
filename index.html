@@ -88,15 +88,15 @@
     const cleanup=()=>{if(finished)return;finished=true;clearTimeout(requestTimer);delete window[callbackName];script.remove();$('refreshBtn').disabled=false;$('refreshBtn').textContent='↻ Refresh';};
     window[callbackName]=data=>{
       cleanup();
-      if(!data || data.error){showError(data&&data.error?data.error:'The inventory API returned an invalid response.');$('rowCount').textContent='Could not load data';return;}
-      allRows=Array.isArray(data.rows)?data.rows:[];const summary=data.summary||{};
+      if(!data || data.success === false || data.error || data.message && !Array.isArray(data.rows)){showError((data&&(data.message||data.error))||'The inventory API returned an invalid response.');$('rowCount').textContent='Could not load data';return;}
+      allRows=Array.isArray(data.rows)?data.rows:(Array.isArray(data.data)?data.data.map(r=>({sl:r['SL'],name:r['Spare Parts Name'],unit:r['Unit'],issue:r['Issue Qty'],mrr:r['MRR Qty'],trnr:r['TRNR Qty'],trns:r['TRNS Qty'],stock:r['P Stock'],location:r['Location']})):[]);const summary=data.summary||{};
       $('totalCount').textContent=numberText(summary.total??allRows.length);
       $('availableCount').textContent=numberText(summary.available??allRows.filter(r=>Number(r.stock)>0).length);
       $('outCount').textContent=numberText(summary.out??allRows.filter(r=>Number(r.stock)<=0).length);
       $('lastUpdated').textContent='Last synced: '+new Date(data.updatedAt||Date.now()).toLocaleString();renderTable();
     };
     script.onerror=()=>{cleanup();showError('Could not connect to Apps Script. Check the Web App URL, deployment access, and Code.gs API setup.');$('rowCount').textContent='Could not load data';};
-    script.src=API_URL+(API_URL.includes('?')?'&':'?')+'api=1&callback='+encodeURIComponent(callbackName)+'&_='+Date.now();
+    script.src=API_URL+(API_URL.includes('?')?'&':'?')+'action=stock&callback='+encodeURIComponent(callbackName)+'&_='+Date.now();
     document.head.appendChild(script);
     requestTimer=setTimeout(()=>{cleanup();showError('Request timed out. Check that the Apps Script Web App is deployed and accessible.');$('rowCount').textContent='Request timed out';},20000);
   }
