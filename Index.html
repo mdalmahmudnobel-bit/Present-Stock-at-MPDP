@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventory Challan Posting System</title>
+  <style>
+    :root{--green:#276b35;--line:#d8dfd8;--bg:#f4f7f4;--ink:#18251b}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}
+    .wrap{max-width:1200px;margin:auto;padding:12px}
+    .muted{color:#b81636;font-size:13px}.card{background:white;border:1px solid var(--line);border-radius:9px;padding:10px;margin:8px 0}
+    .card{margin:10px 0}.section{font-weight:bold;font-size:14px;margin-bottom:8px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.grid label{margin-bottom:2px;font-size:10px}
+    label{display:block;font-size:12px;color:#59665b;margin-bottom:5px}input,select{width:100%;padding:6px 7px;border:1px solid #cbd5cc;border-radius:6px;background:white;font-size:12px;min-width:0;height:32px}
+    input.field-invalid,select.field-invalid{border:2px solid #070826!important;background:#82b3b5!important;box-shadow:0 0 0 2px rgba(217,48,37,.10)}
+    button{border:0;border-radius:7px;padding:10px 14px;font-weight:bold;cursor:pointer;transition:transform .12s ease,filter .12s ease,opacity .12s ease;position:relative}button:active{transform:scale(.97);filter:brightness(.92)}button:disabled{opacity:.72;cursor:wait}.is-loading{opacity:.88!important;cursor:wait!important}.btn-spinner{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-2px;margin-right:7px;animation:btnspin .65s linear infinite}@keyframes btnspin{to{transform:rotate(360deg)}}.primary{background:var(--green);color:white}.light{background:#edf3ed;color:#f5aee7;border:1px solid #cbd8cc}.danger{background:#fff0ed;color:#9b2e1d}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.submit-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.last-submitted{font-weight:bold;color:#276b35;background:#edf5ee;border:1px solid #c9ddcc;border-radius:7px;padding:9px 11px}.ref-loader{display:flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid #b9cbdc;background:#f0f6fc;border-radius:7px}.ref-loader strong{color:#276b35;font-size:12px}.ref-loader input{width:72px;height:29px;text-align:center;font-weight:bold;font-size:13px}.ref-loader button{padding:7px 9px;font-size:11px}.bottom-refresh{display:flex;justify-content:center;margin:18px 0 8px}.bottom-refresh button{min-width:190px}.item{border-top:1px solid var(--line);padding:12px 0}.itemhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-weight:bold}
+    .itemgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 2fr;gap:9px}.tablewrap{overflow:visible}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}th{background:#edf3ed}.material-table{table-layout:fixed;width:100%;min-width:0; border-collapse:separate;border-spacing:0}.material-scroll{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:7px}.material-table thead th{top:0}.material-table th:nth-child(1),.material-table td:nth-child(1){width:5%}.material-table th:nth-child(2),.material-table td:nth-child(2){width:30%}.material-table th:nth-child(3),.material-table td:nth-child(3){width:9%}.material-table th:nth-child(4),.material-table td:nth-child(4){width:9%}.material-table th:nth-child(5),.material-table td:nth-child(5){width:10%}.material-table th:nth-child(6),.material-table td:nth-child(6){width:18%}.material-table th:nth-child(7),.material-table td:nth-child(7){width:19%}.material-table input{width:100%;min-width:0;padding:6px;font-size:12px;height:30px;border-radius:5px}.material-table td{vertical-align:middle;padding:5px}.material-table .row-no{font-weight:bold;color:#797a43}.receive-card{width:calc(100% - 20px);max-width:none;margin:8px 10px 12px;position:sticky;top:0;z-index:30;padding:9px 12px;box-shadow:0 3px 12px rgba(0,0,0,.10)}.receive-card .section{text-align:center;margin-bottom:7px}.receive-card .grid{grid-template-columns:.67fr .67fr 1fr 1fr 2fr 1fr 1fr;gap:7px 9px;align-items:end}.receive-card .grid>div{padding:6px;border-radius:7px;border:1px solid #d5dce5}.receive-card .grid>div:nth-child(1){background:#fff3e8;border-color:#f1cda9}.receive-card .grid>div:nth-child(2){background:#eaf5ff;border-color:#bcd9f0}.receive-card .grid>div:nth-child(3){background:#f1edff;border-color:#d0c5f2}.receive-card .grid>div:nth-child(4){background:#e9f7ef;border-color:#b9dfc7}.receive-card .grid>div:nth-child(5){background:#fff0f3;border-color:#efc3ce}.receive-card .grid>div:nth-child(6){background:#fff8df;border-color:#eadb9b}.receive-card .grid>div:nth-child(7){background:#e8f7f7;border-color:#b6dddd}.receive-card label{font-size:10px}.receive-card input{height:29px;padding:4px 6px;background:rgba(255,255,255,.88)}.material-table thead th{position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--line);white-space:nowrap}.material-table thead th:nth-child(1),.material-table tbody td:nth-child(1){background:#f0f2f5}.material-table thead th:nth-child(2),.material-table tbody td:nth-child(2){background:#eaf3ff}.material-table thead th:nth-child(3),.material-table tbody td:nth-child(3){background:#eaf8ef}.material-table thead th:nth-child(4),.material-table tbody td:nth-child(4){background:#fff5df}.material-table thead th:nth-child(5),.material-table tbody td:nth-child(5){background:#f5edff}.material-table thead th:nth-child(6),.material-table tbody td:nth-child(6){background:#fff0f2}.material-table thead th:nth-child(7),.material-table tbody td:nth-child(7){background:#e8f7f7}.material-table tbody td input{background:rgba(255,255,255,.82);border-color:rgba(90,110,130,.28)}
+
+    .page-nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px;padding:7px;background:#e9eee9;border:1px solid var(--line);border-radius:9px}
+    .page-tab{background:#fff;color:#314536;border:1px solid #707d75;min-width:145px}
+    .page-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+
+    .di-issue-entry{display:flex;flex-direction:column;gap:5px}.di-issue-loader{display:flex;gap:5px;align-items:center}.di-issue-loader input{height:29px;min-width:0}.di-issue-loader button{padding:6px 10px;font-size:11px;white-space:nowrap}
+    .daily-edit-state{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;background:#fff4d6;color:#755300;border:1px solid #e6d18a;font-weight:bold;font-size:12px}
+    .daily-head-card{position:relative;top:auto;min-width:0;width:100%;margin:8px 0 12px}
+    .daily-head-card .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .daily-head-card .grid>div{padding:7px;border:1px solid #d5dce5;border-radius:7px;background:#f8faf8}
+    .daily-head-card input{height:34px;font-size:13px}
+    .daily-issue-scroll{height:auto;max-height:58vh;min-height:250px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+    .daily-issue-table{min-width:1120px}
+    .daily-issue-table th,.daily-issue-table td{padding:6px}
+    .daily-issue-table input{height:32px;min-width:0;width:100%;font-size:12px}
+    .daily-issue-table th:nth-child(1),.daily-issue-table td:nth-child(1){width:4%}
+    .daily-issue-table th:nth-child(2),.daily-issue-table td:nth-child(2){width:21%}
+    .daily-issue-table th:nth-child(3),.daily-issue-table td:nth-child(3){width:7%}
+    .daily-issue-table th:nth-child(4),.daily-issue-table td:nth-child(4){width:8%}
+    .daily-issue-table th:nth-child(5),.daily-issue-table td:nth-child(5){width:15%}
+    .daily-issue-table th:nth-child(6),.daily-issue-table td:nth-child(6){width:10%}
+    .daily-issue-table th:nth-child(7),.daily-issue-table td:nth-child(7){width:15%}
+    .daily-issue-table th:nth-child(8),.daily-issue-table td:nth-child(8){width:15%}
+    .daily-issue-table th:nth-child(9),.daily-issue-table td:nth-child(9){width:5%}
+    .daily-issue-table tbody td{vertical-align:middle}
+    .daily-issue-table tbody tr:nth-child(odd) td{background:#f8fafc}
+    .required{color:#09479e}
+    @media(max-width:700px){.daily-head-card .grid{grid-template-columns:repeat(2,minmax(0,1fr))}.daily-head-card .grid>div:first-child{grid-column:span 1}.page-tab{flex:1;min-width:120px}}
+    #app,#admin{display:none}.notice{padding:10px;border-radius:7px;margin:8px 0;background:#ebdf44;color:#244c2c}.error{background:#fff0ed;color:#9b2e1d}
+    @media(max-width:700px){.wrap{padding:8px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.receive-card{position:sticky;top:0;min-width:900px}.receive-card .grid{grid-template-columns:.67fr .67fr 1fr 1fr 2fr 1fr 1fr}.material-table{min-width:900px}.tablewrap{overflow:visible}}
+
+/* ===== UI polish layer: visual-only enhancements; existing IDs and workflow stay unchanged ===== */
+:root{
+  --green:#176b43;--green-dark:#105334;--line:#dbe5df;--bg:#f3f6f8;--ink:#17251d;
+  --surface:#ffffff;--muted:#64746b;--shadow:0 5px 20px rgba(23,45,33,.07);
+  --focus:0 0 0 3px rgba(23,107,67,.13)
+}
+html{scroll-behavior:smooth}
+body{background:#f6f7fa;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.45}
+.wrap{max-width:1440px;padding:18px 20px 28px}
+.card{background:var(--surface);border:1px solid #e0e8e3;border-radius:14px;padding:16px;margin:13px 0;box-shadow:var(--shadow)}
+.section{font-size:15px;font-weight:750;color:#193d2a;letter-spacing:.15px;margin-bottom:12px}
+label{font-size:12px;font-weight:650;color:#46584d;margin-bottom:6px}
+input,select{height:38px;padding:8px 10px;border:1px solid #cbd8d0;border-radius:8px;background:#fff;color:#1d2b22;font-size:13px;font-family:inherit;transition:border-color .15s,box-shadow .15s,background .15s}
+input:focus,select:focus{outline:0;border-color:#27845a;box-shadow:var(--focus)}
+input::placeholder{color:#98a59d}
+button{border-radius:9px;padding:10px 15px;font-size:12px;letter-spacing:.1px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease,filter .15s ease}
+button:hover:not(:disabled){filter:brightness(.98);box-shadow:0 4px 10px rgba(20,55,35,.12);transform:translateY(-1px)}
+button:focus-visible{outline:3px solid rgba(39,132,90,.25);outline-offset:2px}
+.primary{background:#17633f;color:#fff;box-shadow:0 3px 8px rgba(23,107,67,.16)}
+.light{background:#f4f8f5;color:#24553a;border:1px solid #d5e2d9}
+.danger{background:#fff2f0;color:#a33327;border:1px solid #f2d2cc}
+.actions{gap:9px;align-items:center;margin-top:14px}
+.grid{gap:10px}
+.page-nav{position:sticky;top:0;z-index:50;gap:8px;margin:8px 0 14px;padding:8px;background:rgba(232,240,235,.94);border:1px solid #d5e1d9;border-radius:12px;backdrop-filter:blur(10px);box-shadow:0 3px 12px rgba(25,55,37,.06)}
+.page-tab{min-width:160px;padding:11px 18px;border-radius:9px;background:#fff;border:1px solid #d5e1d9;color:#3c5546}
+.page-tab.active{background:#155d3c;border-color:#155d3c;color:#fff;box-shadow:0 3px 9px rgba(23,107,67,.18)}
+.receive-card{border-color:#d8e4dc;box-shadow:0 7px 22px rgba(26,61,39,.09);padding:14px 16px}
+.receive-card .section{text-align:left;font-size:14px}
+.receive-card .grid>div{border-radius:9px;padding:8px}
+.receive-card input{height:35px;border-radius:7px}
+.material-scroll{border:1px solid #d8e2dc;border-radius:11px;background:#fff;box-shadow:inset 0 1px 3px rgba(15,40,25,.025)}
+.material-table{border-spacing:0}
+.material-table thead th{font-size:11px;font-weight:750;letter-spacing:.2px;color:#203b2b;padding:11px 8px;border-bottom:1px solid #d4dfd8}
+.material-table td{padding:7px 6px;border-bottom:1px solid #e7ede9}
+.material-table tbody tr:hover td{filter:brightness(.985)}
+.material-table input{height:34px;border:1px solid #d5dfd8;border-radius:7px;padding:7px 8px;font-size:12px}
+.material-table tbody tr:last-child td{border-bottom:0}
+.daily-head-card .grid>div{border-radius:9px;background:#f7faf8;border-color:#dce6df;padding:9px}
+.daily-head-card input{height:37px}
+.daily-edit-state{border-radius:9px;padding:9px 12px}
+.last-submitted{border-radius:9px;padding:9px 12px;background:#edf7f0;border-color:#d0e6d7;color:#17643f}
+.ref-loader{border-radius:10px;padding:6px 8px;background:#f0f6fc;border-color:#d4e2ef}
+.ref-loader input{height:32px;border-radius:7px}
+.notice{padding:11px 13px;border:1px solid #d6e7da;border-radius:9px;background:#f0f8f2;color:#205b36;font-size:12px;font-weight:600}
+.notice.error{border-color:#f0d3ce;background:#fff3f1;color:#a12f23}
+#login{max-width:440px!important;margin:8vh auto 24px!important;padding:28px!important;border:1px solid #dce8e0;border-radius:18px!important;box-shadow:0 16px 45px rgba(20,55,35,.12)!important;background:rgba(255,255,255,.97)}
+#login:before{content:"INVENTORY MANAGEMENT";display:block;margin:0 0 20px;padding:15px 14px;border-radius:12px;background:#27865a;color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-align:center}
+#login .section{font-size:20px;text-align:center;color:#183e2a;margin-bottom:18px}
+#login label{margin-top:12px!important;font-size:12px}
+#login input{height:43px;font-size:14px}
+#login .actions{margin-top:18px}
+#login .actions button{width:100%;height:43px;font-size:14px}
+#loginMsg:empty{display:none}
+#success{border:1px solid #cfe4d5;background:#fff;}
+#success h2{font-size:27px;color:#176b43;letter-spacing:.5px;margin:5px 0}
+#admin .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#history{font-variant-numeric:tabular-nums}
+#history tr{transition:background .12s}
+#history tr:hover td{background:#f4f8f5}
+.bottom-refresh{margin:22px 0 10px}
+.bottom-refresh button{min-width:230px}
+#app>.actions,#dailyIssuePage>.actions{justify-content:flex-end}
+.required{font-weight:800}
+@media(max-width:900px){.wrap{padding:12px}.receive-card{position:relative;top:auto;width:100%;margin:10px 0}.receive-card .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.receive-card .grid>div:nth-child(5){grid-column:span 2}.material-scroll{overflow:auto}.material-table{min-width:900px}.daily-issue-table{min-width:1120px}}
+@media(max-width:700px){
+  .wrap{padding:8px 8px 20px}.card{padding:12px;border-radius:11px;margin:9px 0}
+  .page-nav{top:0;padding:6px}.page-tab{min-width:0;flex:1;padding:10px 8px;font-size:11px}
+  .receive-card{min-width:0;width:100%;padding:11px}
+  .receive-card .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .receive-card .grid>div:nth-child(5){grid-column:auto}
+  .receive-card .grid>div{padding:7px}
+  .receive-card label{font-size:10px}.receive-card input{font-size:12px}
+  .material-scroll{max-height:55vh;overflow:auto}
+  .material-table{min-width:900px}
+  .daily-issue-scroll{max-height:58vh;min-height:230px}
+  .daily-issue-table{min-width:1120px}
+  .daily-head-card .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .daily-head-card .grid>div:first-child{grid-column:span 2}
+  .actions{gap:7px}.actions button{max-width:100%}
+  .submit-row{width:100%;gap:7px}.submit-row>button{flex:1}
+  .last-submitted{font-size:11px;padding:8px}
+  #login{margin:7vh 8px 20px!important;padding:20px!important}
+  #admin .grid{grid-template-columns:1fr}
+  #app>.actions,#dailyIssuePage>.actions{justify-content:stretch}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+    .trn-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+    .trn-table{min-width:850px}
+    .trn-table th:nth-child(1),.trn-table td:nth-child(1){width:5%}
+    .trn-table input{width:100%;min-width:0}
+    @media(max-width:700px){.trn-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+  
+
+/* ===== Color theme refresh ONLY: page structure, sizing and workflow untouched ===== */
+body{background:#f2fbf8}
+.page-nav{background:#e9f8f1;border-color:#d8e1f2}
+.page-tab:nth-child(1){background:#fff0ed;border-color:#f1c9c1;color:#943e32}
+.page-tab:nth-child(2){background:#eaf3ff;border-color:#c9dcf6;color:#285b9b}
+.page-tab:nth-child(3){background:#e9f8f1;border-color:#bfe5d1;color:#176b4a}
+.page-tab:nth-child(4){background:#f4edff;border-color:#d9c9f3;color:#6841a0}
+.page-tab:nth-child(1).active{background:#b94336;border-color:#b94336;color:#fff}
+.page-tab:nth-child(2).active{background:#285eae;border-color:#285eae;color:#fff}
+.page-tab:nth-child(3).active{background:#14714e;border-color:#14714e;color:#fff}
+.page-tab:nth-child(4).active{background:#6844a8;border-color:#6844a8;color:#fff}
+
+/* MRR Posting — warm coral */
+#mrrPage>.card{background:#fff;border-color:#f0d7d0}
+#mrrPage>.receive-card{background:#fff}
+#mrrPage>.card>.section{color:#a84738}
+#mrrPage .material-table thead th{background:#f7ded8!important;color:#79372d}
+#mrrPage .material-table tbody td:nth-child(2n){background:#fff9f7}
+#mrrPage .ref-loader{background:#fff1ec;border-color:#efc9bf}
+#mrrPage .last-submitted{background:#fff0eb;border-color:#efc8be;color:#a84738}
+
+/* Daily Issue — blue / sky */
+#dailyIssuePage>.card{background:#fff;border-color:#d3e3f6}
+#dailyIssuePage>.receive-card{background:#fff}
+#dailyIssuePage .section{color:#285f9f}
+#dailyIssuePage .daily-head-card .grid>div{background:#edf5ff;border-color:#cbdff7}
+#dailyIssuePage .material-table thead th{background:#dcecff!important;color:#244f83}
+#dailyIssuePage .daily-issue-table tbody tr:nth-child(odd) td{background:#f3f8ff}
+#dailyIssuePage .last-submitted{background:#eaf3ff;border-color:#c6dcf7;color:#285f9f}
+
+/* TRN Received — teal / emerald */
+#trnReceivedPage>.card{background:#fff;border-color:#cfe9dc}
+#trnReceivedPage>.receive-card{background:#fff}
+#trnReceivedPage .section{color:#176b4a}
+#trnReceivedPage .receive-card .grid>div{background:#eaf8f1;border-color:#c5e6d5}
+#trnReceivedPage .material-table thead th{background:#d7f0e4!important;color:#155c42}
+#trnReceivedPage .daily-issue-table tbody tr:nth-child(odd) td{background:#f1faf5}
+#trnReceivedPage .last-submitted{background:#e6f7ee;border-color:#bfe4d0;color:#176443}
+
+/* TRN Send — violet / indigo */
+#trnSendPage>.card{background:#fff;border-color:#e0d5f2}
+#trnSendPage>.receive-card{background:#fff}
+#trnSendPage .section{color:#6845a0}
+#trnSendPage .receive-card .grid>div{background:#f3edff;border-color:#ded0f5}
+#trnSendPage .material-table thead th{background:#e8defa!important;color:#563783}
+#trnSendPage .daily-issue-table tbody tr:nth-child(odd) td{background:#f8f4ff}
+#trnSendPage .last-submitted{background:#f0eaff;border-color:#d9caf2;color:#6845a0}
+
+/* Consistent colorful table borders and calm input surfaces */
+.material-table th{border-bottom-color:#d7e1e8}
+.material-table td{border-bottom-color:#e7edf2}
+.material-table tbody td input{background:rgba(255,255,255,.92)}
+.notice:not(.error){background:#eef6ff;border-color:#cfe3d8;color:#245d43}
+
+
+
+/* Final layout refinement: identical table header/body row heights */
+:root{--uniform-table-row-height:42px}
+table:not(.no-uniform-rows){border-collapse:collapse}
+table:not(.no-uniform-rows) thead th,
+table:not(.no-uniform-rows) tbody td{
+  box-sizing:border-box!important;
+  height:var(--uniform-table-row-height)!important;
+  min-height:var(--uniform-table-row-height)!important;
+  max-height:var(--uniform-table-row-height)!important;
+  padding:4px 7px!important;
+  line-height:1.2!important;
+  vertical-align:middle!important;
+  overflow:hidden;
+}
+table:not(.no-uniform-rows) thead th{white-space:normal}
+table:not(.no-uniform-rows) tbody td input,
+table:not(.no-uniform-rows) tbody td select,
+table:not(.no-uniform-rows) tbody td textarea{
+  box-sizing:border-box!important;
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  margin:0!important;
+  padding:4px 7px!important;
+  line-height:20px!important;
+}
+/* Four top navigation buttons: centered, with no surrounding/button borders */
+.page-nav{
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  flex-wrap:wrap!important;
+  width:100%;
+  box-sizing:border-box;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  padding:8px 0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.page-nav .page-tab,
+.page-nav .page-tab:hover,
+.page-nav .page-tab:focus,
+.page-nav .page-tab:active{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+.page-nav .page-tab{flex:0 0 auto!important}
+@media(max-width:700px){
+  .page-nav{justify-content:center!important;gap:7px!important}
+  .page-nav .page-tab{flex:1 1 calc(50% - 7px)!important;max-width:220px}
+}
+
+
+/* ===== Compact single-line header fields on every transaction page ===== */
+.receive-card{overflow-x:auto!important;position:relative!important;top:auto!important}
+#mrrPage>.receive-card .grid{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:6px!important;align-items:end!important;min-width:0!important}
+#dailyIssuePage>.receive-card .daily-head-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;align-items:end!important;min-width:0!important}
+#trnReceivedPage>.receive-card .trn-grid{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:6px!important;align-items:end!important;min-width:0!important}
+#trnSendPage>.receive-card .trn-grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:6px!important;align-items:end!important;min-width:0!important}
+#mrrPage>.receive-card .grid>div,#dailyIssuePage>.receive-card .grid>div,#trnReceivedPage>.receive-card .grid>div,#trnSendPage>.receive-card .grid>div{min-width:0!important;padding:5px!important}
+#mrrPage>.receive-card label,#dailyIssuePage>.receive-card label,#trnReceivedPage>.receive-card label,#trnSendPage>.receive-card label{font-size:10px!important;line-height:1.15!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px!important}
+#mrrPage>.receive-card input,#dailyIssuePage>.receive-card input,#trnReceivedPage>.receive-card input,#trnSendPage>.receive-card input{width:100%!important;min-width:0!important;height:29px!important;padding:4px 6px!important;font-size:11px!important}
+#dailyIssuePage>.receive-card .muted{font-size:10px!important;margin-bottom:5px!important}
+.trn-reload-bottom{margin:10px 0 14px!important;padding:10px 14px!important;display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #cfe0d7!important}
+.trn-reload-bottom .reload-bottom-title{font-weight:700;font-size:12px;color:#315b48;white-space:nowrap}
+.trn-reload-bottom .reload-bottom-controls{display:flex;align-items:center;gap:10px;min-width:min(420px,55%)}
+.trn-reload-bottom label{font-size:11px;font-weight:700;white-space:nowrap;margin:0}
+.trn-reload-bottom .di-issue-loader{flex:1;min-width:0}
+.trn-reload-bottom .di-issue-loader input{width:100%;height:30px}
+.trn-reload-bottom .di-issue-loader button{height:30px;padding:5px 14px}
+@media(max-width:900px){
+ #mrrPage>.receive-card .grid{grid-template-columns:repeat(4,minmax(125px,1fr))!important;min-width:720px!important}
+ #dailyIssuePage>.receive-card .daily-head-grid{grid-template-columns:repeat(4,minmax(130px,1fr))!important;min-width:560px!important}
+ #trnReceivedPage>.receive-card .trn-grid{grid-template-columns:repeat(4,minmax(125px,1fr))!important;min-width:650px!important}
+ #trnSendPage>.receive-card .trn-grid{grid-template-columns:repeat(3,minmax(140px,1fr))!important;min-width:600px!important}
+ .trn-reload-bottom{align-items:flex-start;flex-direction:column;gap:8px}
+ .trn-reload-bottom .reload-bottom-controls{width:100%;min-width:0}
+}
+
+</style>
+<style>
+
+/* ===== HIGH-CONTRAST COLOR BOOST: colors and borders only; no layout changes ===== */
+body{background:#d9fff0!important;color:#142033!important}
+.page-nav{background:#d1f8e7!important;border:2px solid #243b5a!important;box-shadow:0 4px 14px rgba(20,35,60,.18)!important}
+.page-tab{border:2px solid #243b5a!important;font-weight:900!important;color:#17243a!important;box-shadow:0 2px 5px rgba(0,0,0,.12)!important}
+.page-tab:nth-child(1){background:#f04438!important;color:#fff!important;border-color:#8d201b!important}
+.page-tab:nth-child(2){background:#1672dc!important;color:#fff!important;border-color:#104b91!important}
+.page-tab:nth-child(3){background:#07945b!important;color:#062f20!important;border-color:#075b3a!important}
+.page-tab:nth-child(4){background:#7c3aed!important;color:#fff!important;border-color:#4c1d95!important}
+.page-tab:nth-child(1).active{background:#bd2118!important;color:#fff!important;border-color:#74140f!important}
+.page-tab:nth-child(2).active{background:#064eae!important;color:#fff!important;border-color:#073675!important}
+.page-tab:nth-child(3).active{background:#006b42!important;color:#fff!important;border-color:#034b30!important}
+.page-tab:nth-child(4).active{background:#5520b5!important;color:#fff!important;border-color:#351078!important}
+
+/* Dark outlines for every major card and field group */
+.card,.receive-card,.daily-head-card,.tablewrap,.ref-loader,.di-issue-loader,.last-submitted,.notice{
+ border:2px solid #34445b!important;box-shadow:0 3px 10px rgba(15,28,48,.10)!important
+}
+label,.section{font-weight:900!important;color:#17243a!important}
+input,select,textarea{
+ border:2px solid #46566d!important;background:#fff!important;color:#101827!important;
+ box-shadow:inset 0 1px 2px rgba(0,0,0,.08)!important
+}
+input:focus,select:focus,textarea:focus{border:2px solid #063f91!important;box-shadow:0 0 0 3px rgba(30,110,220,.2)!important;outline:none!important}
+button{border:2px solid #26364d!important;font-weight:900!important;box-shadow:0 2px 5px rgba(0,0,0,.16)!important}
+button.primary{background:#007b50!important;color:#fff!important;border-color:#005c3b!important}
+button.light{background:#dce8f8!important;color:#17243a!important;border-color:#34445b!important}
+button.danger{background:#c62828!important;color:#fff!important;border-color:#791515!important}
+
+/* MRR Posting: vivid coral / orange */
+#mrrPage>.card{background:#ffd2bd!important;border-color:#9b3525!important}
+#mrrPage>.receive-card{background:#ffe9d4!important}
+#mrrPage>.card>.section{color:#8e2117!important}
+#mrrPage .receive-card .grid>div{background:#ffad8b!important;border:2px solid #9b3525!important}
+#mrrPage .material-table thead th{background:#c93425!important;color:#fff!important;border:1px solid #782018!important}
+#mrrPage .material-table tbody td{border:1px solid #a64a38!important}
+#mrrPage .last-submitted{background:#ffd5c4!important;color:#762318!important;border-color:#963426!important}
+
+/* Daily Issue: vivid blue */
+#dailyIssuePage>.card{background:#c4e1ff!important;border-color:#174f91!important}
+#dailyIssuePage>.receive-card{background:#d9edff!important}
+#dailyIssuePage .receive-card .grid>div{background:#70b7fa!important;border:2px solid #174f91!important}
+#dailyIssuePage .section{color:#073e80!important}
+#dailyIssuePage .material-table thead th{background:#0754ad!important;color:#fff!important;border:1px solid #073b7c!important}
+#dailyIssuePage .material-table tbody td{border:1px solid #4c86bb!important}
+#dailyIssuePage .last-submitted{background:#b8dcff!important;color:#073e80!important;border-color:#174f91!important}
+
+/* TRN Received: vivid emerald */
+#trnReceivedPage>.card{background:#b8f2d2!important;border-color:#075b3a!important}
+#trnReceivedPage>.receive-card{background:#c9f8dc!important}
+#trnReceivedPage .receive-card .grid>div{background:#42d88e!important;border:2px solid #075b3a!important}
+#trnReceivedPage .section{color:#06452d!important}
+#trnReceivedPage .material-table thead th{background:#006b43!important;color:#fff!important;border:1px solid #034b30!important}
+#trnReceivedPage .material-table tbody td{border:1px solid #36865f!important}
+#trnReceivedPage .last-submitted{background:#aaf0c8!important;color:#06452d!important;border-color:#075b3a!important}
+
+/* TRN Send: vivid violet */
+#trnSendPage>.card{background:#ddc7ff!important;border-color:#51219a!important}
+#trnSendPage>.receive-card{background:#eadcff!important}
+#trnSendPage .receive-card .grid>div{background:#b48aff!important;border:2px solid #51219a!important}
+#trnSendPage .section{color:#40127f!important}
+#trnSendPage .material-table thead th{background:#5420a9!important;color:#fff!important;border:1px solid #351078!important}
+#trnSendPage .material-table tbody td{border:1px solid #8053b7!important}
+#trnSendPage .last-submitted{background:#d9c1ff!important;color:#40127f!important;border-color:#51219a!important}
+
+/* Table grid lines and labels are stronger and easier to distinguish */
+.material-table{border:2px solid #34445b!important}
+.material-table th,.material-table td{border:1px solid #66758a!important}
+.material-table tbody tr:nth-child(even) td{filter:brightness(.985)}
+
+</style>
+<style>
+
+/* ===== CLEAN PROFESSIONAL THEME: solid colors only; CSS-only refresh ===== */
+:root{
+  --ui-ink:#172b45;
+  --ui-border:#8ba0b8;
+  --ui-navy:#173b63;
+  --ui-blue:#2463a6;
+  --ui-teal:#087f78;
+  --ui-purple:#6846a5;
+  --ui-surface:#f4f7fb;
+}
+body{
+  background:#eaf0f6!important;
+  color:var(--ui-ink)!important;
+}
+.page-nav{
+  background:#f8fbff!important;
+  border:1px solid #9aadc1!important;
+  box-shadow:0 2px 8px rgba(23,43,69,.10)!important;
+}
+.page-tab{
+  border:1px solid #637d99!important;
+  border-radius:8px!important;
+  box-shadow:none!important;
+  font-weight:700!important;
+  color:#fff!important;
+}
+.page-tab:nth-child(1){background:#244b73!important;border-color:#183958!important;color:#fff!important}
+.page-tab:nth-child(2){background:#2869ad!important;border-color:#174d86!important;color:#fff!important}
+.page-tab:nth-child(3){background:#087f78!important;border-color:#075e59!important;color:#fff!important}
+.page-tab:nth-child(4){background:#6846a5!important;border-color:#4d327e!important;color:#fff!important}
+.page-tab:nth-child(1).active{background:#173653!important;border-color:#102943!important}
+.page-tab:nth-child(2).active{background:#174f8d!important;border-color:#103c6c!important}
+.page-tab:nth-child(3).active{background:#05645f!important;border-color:#034c48!important}
+.page-tab:nth-child(4).active{background:#503486!important;border-color:#39245f!important}
+
+/* One calm surface style across all four pages */
+.card,.receive-card,.daily-head-card,.tablewrap{
+  background:#f7f9fc!important;
+  border:1px solid #8ea2b8!important;
+  border-radius:12px!important;
+  box-shadow:0 2px 7px rgba(25,48,75,.08)!important;
+}
+.section{
+  color:#193c60!important;
+  font-weight:800!important;
+}
+label{color:#243d59!important;font-weight:700!important}
+
+/* Remove previous orange/red/green/purple panel fills */
+#mrrPage>.card,#dailyIssuePage>.card,#trnReceivedPage>.card,#trnSendPage>.card,
+#mrrPage>.receive-card,#dailyIssuePage>.receive-card,
+#trnReceivedPage>.receive-card,#trnSendPage>.receive-card{
+  background:#f7f9fc!important;
+  border:1px solid #8ea2b8!important;
+}
+#mrrPage .receive-card .grid>div,
+#dailyIssuePage .receive-card .grid>div,
+#trnReceivedPage .receive-card .grid>div,
+#trnSendPage .receive-card .grid>div{
+  background:#e8eff7!important;
+  border:1px solid #9aadc1!important;
+  border-radius:8px!important;
+}
+
+/* Uniform crisp inputs */
+input,select,textarea{
+  background:#fff!important;
+  color:#1c2e43!important;
+  border:1px solid #7f94aa!important;
+  border-radius:7px!important;
+  box-shadow:none!important;
+}
+input:focus,select:focus,textarea:focus{
+  border:1px solid #176eaa!important;
+  box-shadow:0 0 0 2px rgba(23,110,170,.14)!important;
+  outline:none!important;
+}
+
+/* Consistent dark-blue table heading, restrained row shading */
+.material-table{
+  background:#fff!important;
+  border:1px solid #8095aa!important;
+  border-radius:8px!important;
+}
+.material-table thead th{
+  background:#244b73!important;
+  color:#fff!important;
+  border:1px solid #173958!important;
+  font-weight:800!important;
+}
+.material-table tbody td{
+  background:#fff!important;
+  color:#20354c!important;
+  border:1px solid #c0ccd8!important;
+}
+.material-table tbody tr:nth-child(even) td{background:#f0f5fa!important}
+.material-table tbody tr:hover td{background:#e5eff8!important}
+
+/* Buttons: clear hierarchy without extra decoration */
+button{
+  border:1px solid #617d99!important;
+  border-radius:8px!important;
+  box-shadow:none!important;
+  font-weight:700!important;
+}
+button.primary{
+  background:#087f78!important;
+  color:#fff!important;
+  border-color:#05645f!important;
+}
+button.light{
+  background:#e7eef6!important;
+  color:#1c3c5d!important;
+  border-color:#879bb0!important;
+}
+button.danger{
+  background:#b83c4a!important;
+  color:#fff!important;
+  border-color:#8d2935!important;
+}
+.ref-loader,.di-issue-loader,.last-submitted,.notice{
+  background:#eaf1f8!important;
+  color:#24435f!important;
+  border:1px solid #9aadc1!important;
+  border-radius:8px!important;
+  box-shadow:none!important;
+}
+
+</style>
+<style>
+
+/* ===== SIMPLE TABLE GRID: thin #030d05 lines; remove nested rounded field boxes ===== */
+.material-table{
+  border:1px solid #030d05!important;
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  outline:none!important;
+}
+.material-table thead th,
+.material-table tbody td{
+  border:1px solid #030d05!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.material-table thead th{
+  border-bottom:1px solid #030d05!important;
+}
+.material-table tbody tr,
+.material-table tbody tr:nth-child(even),
+.material-table tbody tr:nth-child(odd){
+  border:0!important;
+}
+.material-table tbody td input,
+.material-table tbody td select,
+.material-table tbody td textarea,
+.material-table td input,
+.material-table td select,
+.material-table td textarea{
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  padding-left:8px!important;
+  padding-right:8px!important;
+}
+.material-table tbody td input:focus,
+.material-table tbody td select:focus,
+.material-table tbody td textarea:focus,
+.material-table td input:focus,
+.material-table td select:focus,
+.material-table td textarea:focus{
+  border:0!important;
+  outline:0!important;
+  box-shadow:inset 0 0 0 1px #030d05!important;
+  background:#fff!important;
+}
+
+
+
+/* Verified UI corrections: compact MRR rows and TRN Received actions */
+#mrrPage .material-scroll{border:1px solid #cbd5df;border-radius:6px;overflow:auto}
+#mrrPage .material-table th,
+#mrrPage .material-table td{padding:3px 5px!important;line-height:1.15}
+#mrrPage .material-table tbody tr{height:34px}
+#mrrPage .material-table tbody td input,
+#mrrPage .material-table tbody td select{height:27px!important;min-height:27px!important;padding:3px 5px!important;font-size:11px!important;border-radius:0!important;box-shadow:none!important}
+#trnReceivedPage .actions{display:grid;grid-template-columns:repeat(3,max-content) minmax(150px,1fr);align-items:center;gap:6px;margin-top:8px}
+#trnReceivedPage .actions button{padding:6px 10px!important;font-size:11px!important;line-height:1.15;white-space:nowrap;border-radius:5px}
+#trnReceivedPage .actions .last-submitted,
+#trnReceivedPage .actions .daily-edit-state{font-size:10px;padding:6px 8px;min-width:0}
+@media(max-width:700px){
+  #trnReceivedPage .actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #trnReceivedPage .actions button{width:100%;white-space:normal}
+  #trnReceivedPage .actions .last-submitted,
+  #trnReceivedPage .actions .daily-edit-state{grid-column:1/-1}
+}
+</style>
+
+
+<!-- COLOR THEME ONLY: keeps all existing HTML structure and JavaScript unchanged -->
+<style id="inventory-color-theme">
+:root{
+  --green:#176b52;--green-dark:#10533f;--line:#d7e2ec;--bg:#f2f5fa;--ink:#18283b;
+  --blue:#245b9b;--blue-dark:#194779;--teal:#087e83;--amber:#a86612;--purple:#6950a1;
+}
+body{background:#f1f5fa;color:#1c2d42}
+.card{background:#fff;border:1px solid #dce5ef;box-shadow:0 5px 18px rgba(35,61,91,.075)}
+.section{color:#173f68;border-left:4px solid #2d78b7;padding:7px 10px;background:#edf5fd;border-radius:0 8px 8px 0}
+label{color:#40566f}
+input,select{border-color:#c8d5e3;background:#fff;color:#1c2d42}
+input:focus,select:focus{border-color:#287bb8;box-shadow:0 0 0 3px rgba(40,123,184,.14)}
+input::placeholder{color:#9aa9b8}
+button{font-weight:700}
+.primary{background:#176b52!important;color:#fff!important;border:1px solid #12583f!important;box-shadow:0 3px 8px rgba(23,107,82,.17)}
+.light{background:#eaf2fb!important;color:#24598c!important;border:1px solid #c8d9ec!important}
+.danger{background:#fff0ef!important;color:#b13b35!important;border:1px solid #f0cfcc!important}
+.page-nav{background:#e8eef7;border-color:#d2deec}
+.page-tab{background:#fff;color:#31516f;border:1px solid #c9d7e6}
+#navMrr{background:#e6f2ff;color:#205c98;border-color:#b9d3ee}
+#navDailyIssue{background:#e5f5ef;color:#17694e;border-color:#b8dfcf}
+#navTrnReceived{background:#fff3df;color:#956018;border-color:#efd5a7}
+#navTrnSend{background:#f0ebfb;color:#66509b;border-color:#d4c9ef}
+#navMrr.active{background:#245f9c;color:#fff;border-color:#245f9c}
+#navDailyIssue.active{background:#167454;color:#fff;border-color:#167454}
+#navTrnReceived.active{background:#a86b18;color:#fff;border-color:#a86b18}
+#navTrnSend.active{background:#6b55a5;color:#fff;border-color:#6b55a5}
+.receive-card .grid>div:nth-child(1){background:#fff3e8;border-color:#edc99f}
+.receive-card .grid>div:nth-child(2){background:#eaf4ff;border-color:#c2d9f1}
+.receive-card .grid>div:nth-child(3){background:#f0edff;border-color:#d2c9f0}
+.receive-card .grid>div:nth-child(4){background:#eaf7ef;border-color:#c1dfcb}
+.receive-card .grid>div:nth-child(5){background:#fff0f3;border-color:#eccbd3}
+.receive-card .grid>div:nth-child(6){background:#fff8e5;border-color:#ebdda9}
+.receive-card .grid>div:nth-child(7){background:#e8f7f7;border-color:#bee0df}
+.material-scroll{border-color:#cbd9e8;background:#fff}
+.material-table thead th{background:#234f79!important;color:#fff!important;border-color:#1d456b!important}
+.material-table tbody td{border-color:#e0e8f0}
+.material-table tbody tr:nth-child(even) td{filter:brightness(.985)}
+.material-table thead th:nth-child(1),.material-table tbody td:nth-child(1){background:#edf1f6}
+.material-table thead th:nth-child(2),.material-table tbody td:nth-child(2){background:#eaf3ff}
+.material-table thead th:nth-child(3),.material-table tbody td:nth-child(3){background:#eaf7ef}
+.material-table thead th:nth-child(4),.material-table tbody td:nth-child(4){background:#fff5e4}
+.material-table thead th:nth-child(5),.material-table tbody td:nth-child(5){background:#f2edff}
+.material-table thead th:nth-child(6),.material-table tbody td:nth-child(6){background:#fff0f2}
+.material-table thead th:nth-child(7),.material-table tbody td:nth-child(7){background:#e9f7f7}
+.material-table tbody td input{background:#fff;border-color:#cbd8e5}
+.daily-issue-table thead th{background:#245b79;color:#fff;border-color:#1c4b65}
+.daily-issue-table tbody tr:nth-child(odd) td{background:#edf5fb}
+.daily-issue-table tbody tr:nth-child(even) td{background:#fff}
+.daily-head-card .grid>div{background:#edf5fc;border-color:#d0dfed}
+.last-submitted{background:#e6f5ec;border-color:#bfe0cb;color:#176448}
+.ref-loader{background:#eaf3fc;border-color:#c5d9ed}
+.ref-loader strong{color:#245b91}
+.daily-edit-state{background:#fff4dc;color:#8a5b0a;border-color:#ead39a}
+.notice{background:#e9f6ee;color:#176448;border-color:#c5e3d0}
+.notice.error,.error{background:#fff0ee;color:#a4322b;border-color:#efcbc6}
+.muted{color:#667b91}
+#login:before{background:#205f91}
+#login .section{background:#edf5fc;border-left-color:#287bb8;color:#194d78}
+#successCode{color:#16805b}
+@media(max-width:700px){.page-nav{background:#e8eef7}.page-tab{min-width:120px}}
+</style>
+
+<style id="final-inventory-color-refresh">
+/* ===== FINAL INVENTORY PAGE COLOR REFRESH: color-only overrides ===== */
+:root{
+  --app-bg:#edf2f7;--app-ink:#1b2b40;--app-muted:#5c6f84;
+  --app-border:#cbd6e2;--app-surface:#ffffff;
+  --mrr-accent:#2864a5;--mrr-dark:#1d4d82;--mrr-soft:#eaf2fc;
+  --issue-accent:#16805d;--issue-dark:#116448;--issue-soft:#e8f5ef;
+  --received-accent:#b7791f;--received-dark:#875514;--received-soft:#fff5e4;
+  --send-accent:#7054ad;--send-dark:#513b87;--send-soft:#f1edfa;
+}
+html,body{background:var(--app-bg)!important;color:var(--app-ink)!important}
+body{background-image:linear-gradient(135deg,#f4f7fb 0%,#eaf0f7 55%,#f2f6fa 100%)!important}
+.wrap{color:var(--app-ink)!important}
+.card,.receive-card,.daily-head-card{background:var(--app-surface)!important;border:1px solid var(--app-border)!important;box-shadow:0 4px 14px rgba(32,55,80,.07)!important}
+.section{color:#203e5e!important;background:#edf3f9!important;border-left:4px solid #557da6!important;border-radius:0 7px 7px 0!important}
+label{color:#40566f!important}
+input,select,textarea{background:#fff!important;color:#1d2e43!important;border:1px solid #bac9d8!important}
+input::placeholder,textarea::placeholder{color:#93a2b2!important}
+input:focus,select:focus,textarea:focus{border-color:#3978b8!important;box-shadow:0 0 0 3px rgba(57,120,184,.14)!important;outline:0!important}
+.page-nav{background:#dfe8f2!important;border:1px solid #c5d2e0!important;box-shadow:0 3px 12px rgba(30,55,82,.08)!important}
+.page-tab{color:#fff!important;border:1px solid transparent!important;box-shadow:0 2px 5px rgba(25,45,70,.12)!important}
+#navMrr{background:#477bb3!important;border-color:#2e6097!important}
+#navDailyIssue{background:#39916f!important;border-color:#247553!important}
+#navTrnReceived{background:#c18a36!important;border-color:#98671f!important}
+#navTrnSend{background:#8069b6!important;border-color:#624b99!important}
+#navMrr.active{background:#173f70!important;border-color:#102f55!important}
+#navDailyIssue.active{background:#105d43!important;border-color:#0b4934!important}
+#navTrnReceived.active{background:#80500f!important;border-color:#633c0b!important}
+#navTrnSend.active{background:#493276!important;border-color:#38245e!important}
+button{box-shadow:none!important}
+button.primary{background:#176b52!important;color:#fff!important;border:1px solid #10543f!important}
+button.light{background:#eaf0f7!important;color:#294763!important;border:1px solid #c4d1df!important}
+button.danger{background:#b83e4b!important;color:#fff!important;border:1px solid #92303b!important}
+button:hover:not(:disabled){filter:brightness(.96)!important}
+.ref-loader,.di-issue-loader{background:#edf3f9!important;border-color:#c5d3e1!important;color:#294763!important}
+.last-submitted{background:#e8f5ed!important;border-color:#b9ddc8!important;color:#176443!important}
+.notice{background:#eaf3fc!important;border-color:#c8dced!important;color:#24547e!important}
+.notice.error{background:#fff0ef!important;border-color:#efc9c5!important;color:#a22e28!important}
+.daily-edit-state{background:#fff4d9!important;border-color:#e8d39a!important;color:#78540d!important}
+/* Page accent variables */
+#mrrPage{--page-accent:var(--mrr-accent);--page-dark:var(--mrr-dark);--page-soft:var(--mrr-soft)}
+#dailyIssuePage{--page-accent:var(--issue-accent);--page-dark:var(--issue-dark);--page-soft:var(--issue-soft)}
+#trnReceivedPage{--page-accent:var(--received-accent);--page-dark:var(--received-dark);--page-soft:var(--received-soft)}
+#trnSendPage{--page-accent:var(--send-accent);--page-dark:var(--send-dark);--page-soft:var(--send-soft)}
+#mrrPage .card,#dailyIssuePage .card,#trnReceivedPage .card,#trnSendPage .card{background:#fff!important;border-color:var(--app-border)!important}
+#mrrPage .section,#dailyIssuePage .section,#trnReceivedPage .section,#trnSendPage .section{color:var(--page-dark)!important;background:var(--page-soft)!important;border-left-color:var(--page-accent)!important}
+#mrrPage .receive-card .grid>div,#dailyIssuePage .receive-card .grid>div,#trnReceivedPage .receive-card .grid>div,#trnSendPage .receive-card .grid>div{background:var(--page-soft)!important;border:1px solid color-mix(in srgb,var(--page-accent) 25%,white)!important}
+#mrrPage .ref-loader,#dailyIssuePage .ref-loader,#trnReceivedPage .ref-loader,#trnSendPage .ref-loader{background:var(--page-soft)!important;border-color:color-mix(in srgb,var(--page-accent) 30%,white)!important}
+#mrrPage .material-scroll,#dailyIssuePage .material-scroll,#trnReceivedPage .material-scroll,#trnSendPage .material-scroll{background:#fff!important;border:1px solid var(--app-border)!important}
+#mrrPage .material-table thead th,#dailyIssuePage .material-table thead th,#trnReceivedPage .material-table thead th,#trnSendPage .material-table thead th{background:var(--page-dark)!important;color:#fff!important;border-color:color-mix(in srgb,var(--page-dark) 80%,#000)!important}
+#mrrPage .material-table tbody td,#dailyIssuePage .material-table tbody td,#trnReceivedPage .material-table tbody td,#trnSendPage .material-table tbody td{background:#fff!important;color:#26384d!important;border-color:#cbd6e2!important}
+#mrrPage .material-table tbody tr:nth-child(even) td,#dailyIssuePage .material-table tbody tr:nth-child(even) td,#trnReceivedPage .material-table tbody tr:nth-child(even) td,#trnSendPage .material-table tbody tr:nth-child(even) td{background:#f3f6fa!important}
+#mrrPage .material-table tbody tr:hover td,#dailyIssuePage .material-table tbody tr:hover td,#trnReceivedPage .material-table tbody tr:hover td,#trnSendPage .material-table tbody tr:hover td{background:var(--page-soft)!important}
+#mrrPage .material-table tbody td input,#dailyIssuePage .material-table tbody td input,#trnReceivedPage .material-table tbody td input,#trnSendPage .material-table tbody td input{color:#1d2e43!important;background:transparent!important}
+#mrrPage .actions button.light,#dailyIssuePage .actions button.light,#trnReceivedPage .actions button.light,#trnSendPage .actions button.light{background:var(--page-soft)!important;color:var(--page-dark)!important;border-color:color-mix(in srgb,var(--page-accent) 35%,white)!important}
+#mrrPage .actions button.primary,#dailyIssuePage .actions button.primary,#trnReceivedPage .actions button.primary,#trnSendPage .actions button.primary{background:var(--page-dark)!important;border-color:var(--page-dark)!important;color:#fff!important}
+#mrrPage .last-submitted,#dailyIssuePage .last-submitted,#trnReceivedPage .last-submitted,#trnSendPage .last-submitted{background:var(--page-soft)!important;border-color:color-mix(in srgb,var(--page-accent) 28%,white)!important;color:var(--page-dark)!important}
+.daily-issue-table tbody tr:nth-child(odd) td{background:#f7f9fc!important}
+.daily-issue-table tbody tr:nth-child(even) td{background:#edf2f8!important}
+.daily-issue-table thead th{background:var(--page-dark,#244b73)!important;color:#fff!important}
+#login{background:#fff!important;border-color:#cbd8e5!important}
+#login:before{background:#1d4d78!important;color:#fff!important}
+#login .section{background:#edf3f9!important;color:#1d456b!important;border-left-color:#3979b5!important}
+#success{background:#fff!important;border-color:#b9ddc8!important}
+#success h2{color:#176b52!important}
+#history tr:hover td{background:#eaf2fa!important}
+
+
+/* Corrected shared styling: compact tables, clean navigation and borderless fields */
+:root{--uniform-table-row-height:28px!important}
+table:not(.no-uniform-rows) thead th,
+table:not(.no-uniform-rows) tbody td{
+  height:28px!important;min-height:28px!important;max-height:28px!important;
+  padding:2px 5px!important;line-height:1.05!important;
+  font-size:11px!important;vertical-align:middle!important;
+}
+table:not(.no-uniform-rows) tbody td input,
+table:not(.no-uniform-rows) tbody td select,
+table:not(.no-uniform-rows) tbody td textarea{
+  height:22px!important;min-height:22px!important;max-height:22px!important;
+  padding:1px 5px!important;font-size:10px!important;line-height:18px!important;
+  border-radius:4px!important;
+}
+.material-table tbody td .row-no{line-height:22px!important}
+.daily-issue-table th,.daily-issue-table td{padding:2px 4px!important}
+.trn-table input{height:22px!important}
+
+/* No frame around the four page-navigation buttons */
+.page-nav{
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  flex-wrap:wrap!important;gap:8px!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+  padding:0!important;margin:8px 0 12px!important;border-radius:0!important;
+}
+.page-nav .page-tab{border:0!important;box-shadow:none!important;outline:0!important}
+.page-nav .page-tab:focus,.page-nav .page-tab:focus-visible{outline:0!important;box-shadow:none!important}
+
+/* Borderless input fields throughout every page, including table cells */
+input,select,textarea,
+input:focus,select:focus,textarea:focus,
+input:focus-visible,select:focus-visible,textarea:focus-visible{
+  border:0!important;outline:0!important;box-shadow:none!important;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="login" class="card" style="max-width:420px;margin:35px auto">
+    <div class="section">User Login</div>
+    <label>User ID</label><input id="loginId" autocomplete="username" placeholder="Enter User ID">
+    <label style="margin-top:10px">Password</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter Password">
+    <div class="actions"><button class="primary" onclick="doLogin()">Login</button></div><div id="loginMsg"></div>
+  </div>
+
+  <div id="app">
+    <div style="display:none">
+      <datalist id="s_item"></datalist><datalist id="s_unit"></datalist><datalist id="s_indent"></datalist><datalist id="s_receiverName"></datalist>
+      <datalist id="s_rate"></datalist><datalist id="s_physical"></datalist>
+      <datalist id="s_itemStockLocation"></datalist>
+      <datalist id="s_issueReference"></datalist><datalist id="s_equipment"></datalist><datalist id="s_remarks"></datalist>
+      <datalist id="trr_challanNo"></datalist><datalist id="trr_fromProject"></datalist><datalist id="trr_indent167"></datalist><datalist id="trr_item"></datalist><datalist id="trr_unit"></datalist><datalist id="trr_physical"></datalist><datalist id="trr_createLocation"></datalist>
+      <datalist id="trs_gatePassNo"></datalist><datalist id="trs_indentNo"></datalist><datalist id="trs_erpTrnNo"></datalist><datalist id="trs_toProject"></datalist><datalist id="trs_item"></datalist><datalist id="trs_unit"></datalist><datalist id="trs_receiverName"></datalist>
+    </div>
+    <div class="page-nav">
+      <button type="button" id="navMrr" class="page-tab active" onclick="showAppPage('mrrPage',this)">MRR Posting</button>
+      <button type="button" id="navDailyIssue" class="page-tab" onclick="showAppPage('dailyIssuePage',this)">Daily Issue</button>
+      <button type="button" id="navTrnReceived" class="page-tab" onclick="showAppPage('trnReceivedPage',this)">TRN Received</button>
+      <button type="button" id="navTrnSend" class="page-tab" onclick="showAppPage('trnSendPage',this)">TRN Send</button>
+    </div>
+    <div id="mrrPage">
+    <div class="card receive-card">
+      <div class="section">Challan Receive Information</div>
+      <div class="grid">
+        <div><label>Challan Date</label><input id="challanDate" type="date" required aria-required="true"></div>
+        <div><label>Received Date</label><input id="receivedDate" type="date" required aria-required="true"></div>
+        <div><label>ERP MRR</label><input id="mrr" list="s_mrr" placeholder="ERP MRR"><datalist id="s_mrr"></datalist></div>
+        <div><label>PR</label><input id="pr" list="s_pr" placeholder="PR Number"><datalist id="s_pr"></datalist></div>
+        <div><label>Vendor</label><input id="vendor" list="s_vendor" placeholder="Vendor Name" required aria-required="true"><datalist id="s_vendor"></datalist></div>
+        <div><label>Challan No</label><input id="challanNo" list="s_challanNo" placeholder="Challan Number" required aria-required="true"><datalist id="s_challanNo"></datalist></div>
+        <div><label>Equip</label><input id="equip" list="s_equip" placeholder="Equipment" required aria-required="true"><datalist id="s_equip"></datalist></div>
+      </div>
+    </div>
+    <div class="card">
+
+      <div class="tablewrap material-scroll">
+        <table class="material-table">
+          <thead><tr><th>SL</th><th>Items Name</th><th>Unit</th><th>Quantity</th><th>Rate</th><th>Physical Identity</th><th>Stock Location</th></tr></thead>
+          <tbody id="items"></tbody>
+        </table>
+      </div>
+      <div class="actions"><button class="light" onclick="addItem()">＋ Add More Item</button><button class="light" onclick="copyAllForm()">Copy All Form Data</button><div class="submit-row"><button class="primary" onclick="submitPosting()">Submit & Save to Google Sheet</button><span class="last-submitted" id="lastSubmitted">Last Submitted: Loading...</span><div class="ref-loader"><strong>REF-</strong><input id="refLookup" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" placeholder="Input Num" aria-label="REF serial number" oninput="onRefLookupInput(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();loadRefFromBox()}"><button class="light" type="button" onclick="loadRefFromBox()">Load</button></div></div></div>
+      <div id="postMsg"></div>
+    </div>
+    <div id="success" class="card" style="display:none">
+      <div class="section">Posting Successfully Saved</div><div class="muted">Unique Posting Code</div><h2 id="successCode"></h2><div class="actions"><button class="light" onclick="copyPostingCode()">Copy Posting Code</button></div><div id="successInfo"></div>
+    </div>
+    <div class="card">
+      <div class="section">Recent Posting History</div>
+      <div class="muted">সর্বশেষ ৫টি রেকর্ড। কোনো রেকর্ডে ক্লিক করলে সম্পূর্ণ চালান ও আইটেম ফর্মে লোড হবে।</div>
+      <div class="tablewrap"><table><thead><tr><th>Ref</th><th>Posting Code</th><th>Challan Date</th><th>Vendor</th><th>Challan No</th><th>Items</th><th>Actions</th></tr></thead><tbody id="history"></tbody></table></div>
+    </div>
+    <div class="card" id="admin" >
+      <div class="section">Admin – User Management</div>
+      <div class="grid">
+        <div><label>New User ID</label><input id="newUser" placeholder="User ID"></div>
+        <div><label>Temporary Password (min 8 chars)</label><input id="newPass" type="password" placeholder="Temporary password"></div>
+        <div><label>Role</label><select id="newRole"><option>User</option><option>Admin</option></select></div>
+      </div>
+      <div class="actions"><button class="primary" onclick="createUser()">Create User</button></div>
+      <hr style="border:0;border-top:1px solid #ddd;margin:16px 0">
+      <div class="grid"><div><label>Select User</label><select id="resetUser"></select></div><div><label>New Password</label><input id="resetPass" type="password" placeholder="New password"></div></div>
+      <div class="actions"><button class="light" onclick="resetPassword()">Reset Password</button><button class="light" onclick="refreshUsers()">Refresh Users</button></div>
+      <div id="adminMsg"></div>
+    </div>
+    <div class="bottom-refresh"><button class="light" id="refreshDashboardBtn" onclick="refreshDashboard()">↻ Clear Form &amp; Refresh Dashboard</button></div>
+    <div class="actions"><button class="danger" onclick="doLogout()">Logout</button></div>
+    </div><!-- /mrrPage -->
+
+    <div id="dailyIssuePage" style="display:none">
+      <div class="card receive-card daily-head-card">
+        <div class="section">Daily Issue Information</div>
+        <div class="grid daily-head-grid">
+          <div><label>Date <span class="required">*</span></label><input id="diDate" type="date" required></div>
+          <div><label>Indent <span class="required">*</span></label><input id="diIndent" list="s_indent" placeholder="Indent No" required></div>
+          <div><label>Receiver Name <span class="required">*</span></label><input id="diReceiverName" list="s_receiverName" placeholder="Search / type Receiver Name" required></div>
+          <div><label>Reload by Indent Number</label><div class="di-issue-loader"><input id="diIssueLookup" list="s_indent" placeholder="Indent Number" aria-label="Indent number to reload" onkeydown="if(event.key==='Enter'){event.preventDefault();loadDailyIssueByNumber()}"><button type="button" class="light" id="diLoadBtn" onclick="loadDailyIssueByNumber()">Load</button></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section">Daily Issue Materials</div>
+        <div class="tablewrap material-scroll daily-issue-scroll">
+          <table class="material-table daily-issue-table">
+            <thead><tr><th>SL</th><th>Materials</th><th>Unit</th><th>Qty</th><th>Equipment</th><th>Hour-meter</th><th>Issue No / Reference (Optional)</th><th>Remarks</th><th>Action</th></tr></thead>
+            <tbody id="dailyIssueItems"></tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <button type="button" class="light" onclick="addDailyIssueItem()">＋ Add More Item</button>
+          <button type="button" class="light" onclick="resetDailyIssueForm()">Clear Form</button>
+          <button type="button" class="primary" id="dailyIssueSubmitBtn" onclick="submitDailyIssue()">Submit Daily Issue</button>
+          <span class="last-submitted" id="diSubmittedBy">Submitted By: —</span>
+          <span class="daily-edit-state" id="diEditState" style="display:none">Editing existing Issue</span>
+        </div>
+        <div id="dailyIssueMsg" aria-live="polite"></div>
+      </div>
+      <div class="actions"><button class="danger" onclick="doLogout()">Logout</button></div>
+    </div>
+
+    <div id="trnReceivedPage" style="display:none">
+      <div class="card receive-card daily-head-card">
+        <div class="section">TRN Received Information</div>
+        <div class="grid trn-grid">
+          <div><label>Rec. Date *</label><input id="trrRecDate" type="date"></div>
+          <div><label>Ch_Date *</label><input id="trrChDate" type="date"></div>
+          <div><label>Challan No *</label><input id="trrChallanNo" list="trr_challanNo" placeholder="Challan No"></div>
+          <div><label>From Project *</label><input id="trrFromProject" list="trr_fromProject" placeholder="From Project"></div>
+          <div><label>Indent-167 *</label><input id="trrIndent167" list="trr_indent167" placeholder="Indent-167"></div>
+          <div><label>TRN_Num (Optional)</label><input id="trrTrnNum" placeholder="TRN_Num"></div>
+          <div><label>Create Location *</label><input id="trrCreateLocation" list="trr_createLocation" placeholder="Create Location"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section">TRN Received Items</div>
+        <div class="tablewrap material-scroll"><table class="material-table daily-issue-table trn-table"><thead><tr><th>SL</th><th>Item name</th><th>Unit</th><th>Quantity</th><th>Rate</th><th>Physical Identity</th><th>Action</th></tr></thead><tbody id="trrItems"></tbody></table></div>
+        <div class="actions"><button class="light" type="button" onclick="addTrnItem('received')">＋ Add More Item</button><button class="light" type="button" onclick="resetTrn('received')">Clear Form</button><button class="primary" type="button" id="trrSubmit" onclick="submitTrn('received')">Submit TRN Received</button><span class="last-submitted">Submitted By: <b id="trrUser">—</b></span><span class="daily-edit-state" id="trrEdit" style="display:none">Editing existing TRN</span></div>
+        <div id="trrMsg" aria-live="polite"></div>
+      </div>
+      <div class="card trn-reload-bottom"><div class="reload-bottom-title">Reload Existing TRN Received</div><div class="reload-bottom-controls"><label for="trrLookup">Reload by Challan No *</label><div class="di-issue-loader"><input id="trrLookup" list="trr_challanNo" placeholder="Challan No" onkeydown="if(event.key==='Enter'){event.preventDefault();loadTrn('received')}"><button class="light" type="button" onclick="loadTrn('received')">Load</button></div></div></div>
+      <div class="actions"><button class="danger" onclick="doLogout()">Logout</button></div>
+    </div>
+
+    <div id="trnSendPage" style="display:none">
+      <div class="card receive-card daily-head-card">
+        <div class="section">TRN Send Information</div>
+        <div class="grid trn-grid">
+          <div><label>Date *</label><input id="trsDate" type="date"></div>
+          <div><label>Gate Pss No *</label><input id="trsGatePassNo" list="trs_gatePassNo" placeholder="Gate Pass No"></div>
+          <div><label>Indent No *</label><input id="trsIndentNo" list="trs_indentNo" placeholder="Indent No"></div>
+          <div><label>ERP_TRN NO * (Unique)</label><input id="trsErpTrnNo" list="trs_erpTrnNo" placeholder="ERP_TRN NO"></div>
+          <div><label>TO PROJECT *</label><input id="trsToProject" list="trs_toProject" placeholder="TO PROJECT"></div>
+          <div><label>Receiver *</label><input id="trsReceiverName" list="trs_receiverName" placeholder="Receiver Name" required></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section">TRN Send Items</div>
+        <div class="tablewrap material-scroll"><table class="material-table daily-issue-table trn-table"><thead><tr><th>SL</th><th>Item Name</th><th>Unit</th><th>Quantity</th><th>Action</th></tr></thead><tbody id="trsItems"></tbody></table></div>
+        <div class="actions"><button class="light" type="button" onclick="addTrnItem('send')">＋ Add More Item</button><button class="light" type="button" onclick="resetTrn('send')">Clear Form</button><button class="primary" type="button" id="trsSubmit" onclick="submitTrn('send')">Submit TRN Send</button><span class="last-submitted">Submitted By: <b id="trsUser">—</b></span><span class="daily-edit-state" id="trsEdit" style="display:none">Editing existing TRN</span></div>
+        <div id="trsMsg" aria-live="polite"></div>
+      </div>
+      <div class="card trn-reload-bottom"><div class="reload-bottom-title">Reload Existing TRN Send</div><div class="reload-bottom-controls"><label for="trsLookup">Reload by ERP_TRN NO</label><div class="di-issue-loader"><input id="trsLookup" list="trs_erpTrnNo" placeholder="ERP_TRN NO" onkeydown="if(event.key==='Enter'){event.preventDefault();loadTrn('send')}"><button class="light" type="button" onclick="loadTrn('send')">Load</button></div></div></div>
+      <div class="actions"><button class="danger" onclick="doLogout()">Logout</button></div>
+    </div>
+  </div>
+</div>
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzunnktSRYbjXs5KvraAyx6v-lCumjKBq1VhTlpTgTtiW3N-ecszJX29wSKgFqbnz2Ujg/exec';
+
+window.addEventListener("error", function(ev){
+  const host=document.getElementById("loginMsg");
+  if(host){host.textContent="Page script error: "+(ev.message||"Unknown JavaScript error");host.className="notice error";}
+});
+let token='',role='',user='',itemNo=0,suggestions={},editingPostingCode='',editingDailyIndent='',dailyIssueSuggestions={};
+const $=id=>document.getElementById(id);
+const setValue=(id,value)=>{const el=$(id);if(el)el.value=value??'';return el};
+const todayLocal=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
+
+function showAppPage(pageId, button) {
+  ['mrrPage','dailyIssuePage','trnReceivedPage','trnSendPage'].forEach(id=>{const el=$(id);if(el)el.style.display=id===pageId?'block':'none';});
+  document.querySelectorAll('.page-tab').forEach(b=>b.classList.toggle('active',b===button));
+  if (pageId === 'dailyIssuePage') {
+    if ($('diDate') && !$('diDate').value) $('diDate').value = todayLocal();
+    if ($('dailyIssueItems') && !$('dailyIssueItems').children.length) { dailyIssueRowNo=0; for(let i=0;i<5;i++) addDailyIssueItem(); }
+    const submitted=$('diSubmittedBy'); if(submitted) submitted.textContent='Submitted By: '+user;
+  } else if(pageId==='trnReceivedPage') { initTrnPage('received'); }
+  else if(pageId==='trnSendPage') { initTrnPage('send'); }
+  else syncStickyHeader();
+}
+let dailyIssueRowNo = 0;
+function addDailyIssueItem() {
+  dailyIssueRowNo++;
+  const n=dailyIssueRowNo, tr=document.createElement('tr');
+  tr.className='daily-issue-row';
+  tr.innerHTML=`<td><span class="row-no">${n}</span></td>
+    <td><input data-di="materials" list="s_item" placeholder="Search / type materials" required></td>
+    <td><input data-di="unit" list="s_unit" placeholder="Unit" required></td>
+    <td><input data-di="qty" type="number" min="0.000001" step="any" placeholder="0" required></td>
+    <td><input data-di="equipment" list="s_equipment" placeholder="Equipment" required></td>
+    <td><input data-di="hourMeter" placeholder="Hour-meter (optional)"></td>
+    <td><input data-di="issueReference" list="s_issueReference" placeholder="Optional Issue / Reference"></td>
+    <td><input data-di="remarks" list="s_remarks" placeholder="Remarks"></td>
+    <td><button type="button" class="danger" style="padding:5px 8px" onclick="this.closest('tr').remove();renumberDailyIssueItems()">×</button></td>`;
+  $('dailyIssueItems').appendChild(tr); renumberDailyIssueItems();
+}
+function renumberDailyIssueItems(){[...$('dailyIssueItems').children].forEach((tr,i)=>tr.querySelector('.row-no').textContent=i+1);}
+function resetDailyIssueForm() {
+  editingDailyIndent=''; setValue('diIssueLookup','');
+  const state=$('diEditState'); if(state)state.style.display='none';
+  const submit=$('dailyIssueSubmitBtn'); if(submit)submit.textContent='Submit Daily Issue';
+  setValue('diDate',todayLocal()); setValue('diIndent',''); setValue('diReceiverName','');
+  $('dailyIssueItems').innerHTML=''; dailyIssueRowNo=0;
+  for(let i=0;i<5;i++) addDailyIssueItem();
+  if($('diSubmittedBy')) $('diSubmittedBy').textContent='Submitted By: '+user;
+  const host=$('dailyIssueMsg'); if(host)host.innerHTML='';
+  document.querySelectorAll('#dailyIssuePage .field-invalid').forEach(el=>el.classList.remove('field-invalid'));
+}
+async function loadDailyIssueByNumber(){
+  const key=String($('diIssueLookup').value||'').trim();
+  if(!key){msg('dailyIssueMsg','Please enter an Indent Number to reload.',true);$('diIssueLookup').focus();return;}
+  const btn=$('diLoadBtn');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="btn-spinner"></span>Loading';}
+  try{
+    const d=await call('getDailyIssueDetails',token,key);
+    editingDailyIndent=d.indentNumber;
+    const common=d.common||{};
+    ['diDate','diIndent','diReceiverName'].forEach(id=>setValue(id,''));
+    setValue('diIssueLookup',d.indentNumber||'');
+    setValue('diDate',common.date||'');
+    setValue('diIndent',common.indent||'');
+    setValue('diReceiverName',common.receiverName||'');
+    $('dailyIssueItems').innerHTML='';dailyIssueRowNo=0;
+    const loadedItems=Array.isArray(d.items)?d.items:[];
+    loadedItems.forEach(item=>{
+      addDailyIssueItem();
+      const tr=$('dailyIssueItems').lastElementChild;
+      Object.keys(item||{}).forEach(k=>{const el=tr.querySelector('[data-di="'+k+'"]');if(el)el.value=item[k]??'';});
+    });
+    if(!loadedItems.length)for(let i=0;i<5;i++)addDailyIssueItem();
+    renumberDailyIssueItems();
+    const state=$('diEditState');if(state)state.style.display='inline-flex';
+    $('dailyIssueSubmitBtn').textContent='Update Existing Indent';
+    msg('dailyIssueMsg','Indent '+d.indentNumber+' loaded successfully. '+d.items.length+' material row(s) loaded. Edit/correct and submit to update this Indent group.');
+    const scroll=document.querySelector('.daily-issue-scroll');if(scroll)scroll.scrollTop=0;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){editingDailyIndent='';msg('dailyIssueMsg',e.message||'Unable to load Indent.',true);}
+  finally{if(btn){btn.disabled=false;btn.textContent='Load';}}
+}
+async function submitDailyIssue() {
+  document.querySelectorAll('#dailyIssuePage .field-invalid').forEach(el=>el.classList.remove('field-invalid'));
+  const headerFields=[['diDate','Date'],['diIndent','Indent']];
+  for(const [id,label] of headerFields){const el=$(id);if(!String(el.value||'').trim()){el.classList.add('field-invalid');el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});msg('dailyIssueMsg',label+' is required.',true);return;}}
+  const allRows=[...$('dailyIssueItems').querySelectorAll('tr')];
+  const rows=allRows.map(tr=>{
+    const item={}; tr.querySelectorAll('[data-di]').forEach(el=>item[el.dataset.di]=el.value.trim()); return {tr,item};
+  }).filter(x=>Object.values(x.item).some(v=>String(v||'').trim()!==''));
+  if(!rows.length){msg('dailyIssueMsg','Enter at least one material row. Empty template rows will be ignored.',true);return;}
+  const items=[];
+  for(let i=0;i<rows.length;i++){
+    const tr=rows[i].tr, item=rows[i].item;
+    const required=[['materials','Materials'],['unit','Unit'],['qty','Qty'],['equipment','Equipment']];
+    for(const [key,label] of required){const el=tr.querySelector('[data-di="'+key+'"]');if(!item[key]){el.classList.add('field-invalid');el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});msg('dailyIssueMsg','Row '+(i+1)+': '+label+' is required.',true);return;}}
+    if(!Number.isFinite(Number(item.qty))||Number(item.qty)<=0){const el=tr.querySelector('[data-di="qty"]');el.classList.add('field-invalid');el.focus();msg('dailyIssueMsg','Row '+(i+1)+': Qty must be greater than zero.',true);return;}
+    items.push(item);
+  }
+  if(!$('diReceiverName').value.trim()){$('diReceiverName').classList.add('field-invalid');$('diReceiverName').focus();msg('dailyIssueMsg','Receiver Name is required.',true);return;}
+  const payload={date:$('diDate').value,indent:$('diIndent').value.trim(),receiverName:$('diReceiverName').value.trim(),items};
+  const btn=$('dailyIssueSubmitBtn');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="btn-spinner"></span>Posting...';}
+  try{
+    const result=await call('postDailyIssue',token,payload,editingDailyIndent);
+    const successText=(result.mode==='updated'?'Existing Indent successfully updated. ':'New Daily Issue successfully posted. ')+result.count+' item(s) saved to Main Issue. Rows: '+result.firstRow+'–'+result.lastRow+' | Indent: '+result.indent+' | Submitted By: '+result.submittedBy;
+    resetDailyIssueForm();
+    await refreshDailyIssueSuggestions();
+    msg('dailyIssueMsg',successText + ' Reload is available by Indent Number.');
+  }catch(e){msg('dailyIssueMsg',e.message||'Daily Issue posting failed.',true);}
+  finally{if(btn){btn.disabled=false;btn.textContent='Submit Daily Issue';}}
+}
+
+let trnState={received:{editing:'',rows:0},send:{editing:'',rows:0}};
+function trnPrefix(kind){return kind==='received'?'trr':'trs'}
+async function refreshTrnSuggestions(kind){try{const data=await call('getTrnSuggestions',token,kind)||{};Object.keys(data).forEach(key=>{const dl=$(trnPrefix(kind)+'_'+key);if(!dl)return;dl.innerHTML='';(data[key]||[]).forEach(v=>{const o=document.createElement('option');o.value=v;dl.appendChild(o);});});}catch(e){console.warn('TRN suggestions unavailable:',e);}}
+function initTrnPage(kind){refreshTrnSuggestions(kind);const p=trnPrefix(kind);const userEl=$(p+'User');if(userEl)userEl.textContent=user||'—';const body=$(p+'Items');if(body&&!body.children.length){trnState[kind].rows=0;for(let i=0;i<5;i++)addTrnItem(kind);}const dateId=kind==='received'?p+'RecDate':p+'Date';if($(dateId)&&!$(dateId).value)$(dateId).value=todayLocal();}
+function addTrnItem(kind,item){const p=trnPrefix(kind),body=$(p+'Items'),n=++trnState[kind].rows,tr=document.createElement('tr');tr.className='trn-row';
+ if(kind==='received')tr.innerHTML=`<td><span class="row-no">${n}</span></td><td><input data-trn="item" list="trr_item" placeholder="Item name" required></td><td><input data-trn="unit" list="trr_unit" placeholder="Unit" required></td><td><input data-trn="qty" type="number" min="0.000001" step="any" placeholder="0" required></td><td><input data-trn="rate" type="number" min="0" step="any" placeholder="0"></td><td><input data-trn="physical" list="trr_physical" placeholder="Physical Identity"></td><td><button type="button" class="danger" onclick="this.closest('tr').remove();renumberTrn('${kind}')">×</button></td>`;
+ else tr.innerHTML=`<td><span class="row-no">${n}</span></td><td><input data-trn="item" list="trs_item" placeholder="Item Name" required></td><td><input data-trn="unit" list="trs_unit" placeholder="Unit" required></td><td><input data-trn="qty" type="number" min="0.000001" step="any" placeholder="0" required></td><td><button type="button" class="danger" onclick="this.closest('tr').remove();renumberTrn('${kind}')">×</button></td>`;
+ body.appendChild(tr);if(item)Object.keys(item).forEach(k=>{const el=tr.querySelector('[data-trn="'+k+'"]');if(el)el.value=item[k]??'';});renumberTrn(kind);}
+function renumberTrn(kind){const p=trnPrefix(kind);[...$(p+'Items').children].forEach((tr,i)=>tr.querySelector('.row-no').textContent=i+1);}
+function resetTrn(kind){const p=trnPrefix(kind);trnState[kind].editing='';const fields=kind==='received'?['RecDate','ChDate','ChallanNo','FromProject','Indent167','TrnNum','CreateLocation','Lookup']:['Date','GatePassNo','IndentNo','ErpTrnNo','ToProject','ReceiverName','Lookup'];fields.forEach(k=>setValue(p+k,''));const edit=$(p+'Edit');if(edit)edit.style.display='none';const body=$(p+'Items');body.innerHTML='';trnState[kind].rows=0;for(let i=0;i<5;i++)addTrnItem(kind);msg(p+'Msg','');const submit=$(p+'Submit');if(submit)submit.textContent=kind==='received'?'Submit TRN Received':'Submit TRN Send';}
+function trnCommon(kind){const p=trnPrefix(kind);if(kind==='received')return {recDate:$(p+'RecDate').value,chDate:$(p+'ChDate').value,challanNo:$(p+'ChallanNo').value.trim(),fromProject:$(p+'FromProject').value.trim(),indent167:$(p+'Indent167').value.trim(),trnNum:$(p+'TrnNum').value.trim(),requester:'',createLocation:$(p+'CreateLocation').value.trim()};return {date:$(p+'Date').value,gatePassNo:$(p+'GatePassNo').value.trim(),indentNo:$(p+'IndentNo').value.trim(),erpTrnNo:$(p+'ErpTrnNo').value.trim(),toProject:$(p+'ToProject').value.trim(),receiverName:$(p+'ReceiverName').value.trim()};}
+async function loadTrn(kind){const p=trnPrefix(kind),lookup=$(p+'Lookup'),key=String(lookup.value||'').trim();if(!key){msg(p+'Msg','Please enter the Challan No to reload.',true);lookup.focus();return;}const btn=lookup.parentElement.querySelector('button');if(btn){btn.disabled=true;btn.textContent='Loading...';}try{const d=await call('getTrnDetails',token,kind,key),c=d.common||{};trnState[kind].editing=d.key;const map=kind==='received'?{recDate:'recDate',chDate:'chDate',challanNo:'challanNo',fromProject:'fromProject',indent167:'indent167',trnNum:'trnNum',createLocation:'createLocation'}:{date:'date',gatePassNo:'gatePassNo',indentNo:'indentNo',erpTrnNo:'erpTrnNo',toProject:'toProject',receiverName:'receiverName'};const fieldId=field=>p+field.charAt(0).toUpperCase()+field.slice(1);Object.values(map).forEach(field=>setValue(fieldId(field),''));Object.keys(map).forEach(k=>setValue(fieldId(map[k]),c[k]??''));setValue(p+'Lookup',d.key||key);const body=$(p+'Items');body.innerHTML='';trnState[kind].rows=0;const loadedItems=Array.isArray(d.items)?d.items:[];loadedItems.forEach(it=>addTrnItem(kind,it));if(!loadedItems.length)for(let i=0;i<5;i++)addTrnItem(kind);$(p+'Edit').style.display='inline-flex';$(p+'Submit').textContent='Update Existing '+(kind==='received'?'TRN Received':'TRN Send');msg(p+'Msg','Loaded '+d.key+'. Edit the information and submit to update the same TRN record.');window.scrollTo({top:0,behavior:'smooth'});}catch(e){trnState[kind].editing='';msg(p+'Msg',e.message||'Unable to load TRN.',true);}finally{if(btn){btn.disabled=false;btn.textContent='Load';}}}
+async function submitTrn(kind){const p=trnPrefix(kind),common=trnCommon(kind),key=kind==='received'?common.challanNo:common.erpTrnNo,body=$(p+'Items');document.querySelectorAll('#'+(kind==='received'?'trnReceivedPage':'trnSendPage')+' .field-invalid').forEach(el=>el.classList.remove('field-invalid'));if(!key){const el=$(p+(kind==='received'?'TrnNum':'ErpTrnNo'));el.classList.add('field-invalid');el.focus();msg(p+'Msg',kind==='received'?'Challan No is required.':'ERP_TRN NO is required.',true);return;}const rows=[...body.children].map(tr=>{const item={};tr.querySelectorAll('[data-trn]').forEach(el=>item[el.dataset.trn]=el.value.trim());return {tr,item};}).filter(x=>Object.values(x.item).some(v=>v!==''));if(!rows.length){msg(p+'Msg','Enter at least one item row.',true);return;}if(kind==='send'&&!common.receiverName){const el=$(p+'ReceiverName');el.classList.add('field-invalid');el.focus();msg(p+'Msg','Receiver is required in TRN Send Information.',true);return;}for(let i=0;i<rows.length;i++){const x=rows[i].item,req=['item','unit','qty'];for(const k of req){if(!x[k]){const el=rows[i].tr.querySelector('[data-trn="'+k+'"]');el.classList.add('field-invalid');el.focus();msg(p+'Msg','Row '+(i+1)+': '+k+' is required.',true);return;}}if(!Number.isFinite(Number(x.qty))||Number(x.qty)<=0){const el=rows[i].tr.querySelector('[data-trn="qty"]');el.classList.add('field-invalid');el.focus();msg(p+'Msg','Row '+(i+1)+': Quantity must be greater than zero.',true);return;}}
+ const btn=$(p+'Submit');if(btn){btn.disabled=true;btn.textContent='Saving...';}try{const result=await call('postTrn',token,kind,{common,items:rows.map(x=>x.item)},trnState[kind].editing);msg(p+'Msg',(result.mode==='updated'?'Updated existing ':'Saved new ')+result.key+' successfully. '+result.count+' item row(s) saved in rows '+result.firstRow+'–'+result.lastRow+'.');resetTrn(kind);await refreshTrnSuggestions(kind);msg(p+'Msg',(result.mode==='updated'?'Updated existing ':'Saved new ')+result.key+' successfully. '+result.count+' item row(s) saved in rows '+result.firstRow+'–'+result.lastRow+'.');}catch(e){msg(p+'Msg',e.message||'TRN posting failed.',true);}finally{if(btn){btn.disabled=false;btn.textContent=kind==='received'?'Submit TRN Received':'Submit TRN Send';}}}
+
+function call(name, ...args) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: name, args: args })
+      });
+      const text = await res.text();
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch (_) {
+        throw new Error('Invalid response from Apps Script Web App. Check deployment access ("Anyone").');
+      }
+      if (!json || !json.ok) {
+        throw new Error((json && json.error) || 'Server request failed.');
+      }
+      resolve(json.data);
+    } catch (err) {
+      reject(new Error(err && err.message ? err.message : String(err || 'Network error')));
+    }
+  });
+}
+
+function syncStickyHeader(){const box=document.querySelector('.receive-card');if(box){document.documentElement.style.setProperty('--receive-sticky-height',Math.ceil(box.getBoundingClientRect().height)+'px')}}
+window.addEventListener('resize',syncStickyHeader);
+function msg(id,text,error=false){const host=$(id);if(!host)return;host.textContent='';const d=document.createElement('div');d.className='notice'+(error?' error':'');d.textContent=text;host.appendChild(d)}
+function clearFieldErrors(){document.querySelectorAll('.field-invalid').forEach(el=>el.classList.remove('field-invalid'))}
+function showFieldError(el,message){clearFieldErrors();if(el){el.classList.add('field-invalid');el.focus();if(el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'center'})}msg('postMsg',message,true)}
+document.addEventListener('input',e=>{if(e.target&&e.target.classList)e.target.classList.remove('field-invalid')});
+async function doLogin(){
+  const button=document.querySelector('#login button');
+  const userId=$('loginId').value.trim(), password=$('loginPass').value;
+  if(!userId||!password){msg('loginMsg','Please enter both User ID and Password.',true);return}
+  if(button){button.disabled=true;button.textContent='Connecting...'}
+  msg('loginMsg','Connecting to the server. Please wait...');
+  try{
+    const r=await call('login',userId,password);
+    if(!r||!r.ok){msg('loginMsg',r&&r.message?r.message:'Login failed. The server returned no valid response.',true);return}
+    token=r.token;user=r.userId;role=r.role;
+    if($('diSubmittedBy')) $('diSubmittedBy').textContent='Submitted By: '+user;
+    ['trrUser','trsUser'].forEach(id=>{if($(id))$(id).textContent=user;});
+    setValue('diDate',todayLocal());
+    $('login').style.display='none';$('app').style.display='block';
+    $('admin').style.display=role==='Admin'?'block':'none';
+    syncStickyHeader();await loadApp();syncStickyHeader();
+  }catch(e){msg('loginMsg','Login error: '+(e&&e.message?e.message:String(e)),true)}
+  finally{if(button){button.disabled=false;button.textContent='Login'}}
+}
+$('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
+$('loginId').addEventListener('keydown',function(e){if(e.key==='Enter')$('loginPass').focus()});
+async function loadApp(){try{const d=await call('getAppData',token);setValue('challanDate','');setValue('receivedDate','');suggestions=d.suggestions||{};renderSuggestions();await refreshDailyIssueSuggestions();if($('items')&&!$('items').children.length)for(let i=0;i<5;i++)addItem();renderHistory(d.history||[]);updateLastSubmitted(d.latestPostingCode);if(role==='Admin')await refreshUsers()}catch(e){msg('postMsg',e.message
